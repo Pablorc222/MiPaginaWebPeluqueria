@@ -342,12 +342,27 @@ body {
 }
 
 .text-button {
-  border: 0;
-  background: transparent;
+  border: 1px solid #111111;
+  background: #111111;
+  color: #ffffff;
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 1px;
-  padding: 5px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.text-button:hover {
+  background: #ffffff;
+  color: #111111;
+  border-color: #111111;
+  transform: translateY(-1px);
+}
+
+.text-button:active {
+  transform: translateY(0);
 }
 
 .text-button:hover {
