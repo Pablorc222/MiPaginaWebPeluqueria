@@ -1404,7 +1404,6 @@ img {
 
   .admin-sidebar {
     width: 75px;
-
     padding: 25px 10px;
   }
 
@@ -1424,7 +1423,6 @@ img {
 
   .admin-nav button {
     justify-content: center;
-
     padding: 14px 5px;
   }
 
@@ -1434,13 +1432,11 @@ img {
 
   .admin-nav button {
     font-size: 8px;
-
     text-align: center;
   }
 
   .admin-main {
     width: calc(100% - 75px);
-
     margin-left: 75px;
   }
 
@@ -1454,7 +1450,6 @@ img {
 
   .page-heading {
     align-items: flex-start;
-
     flex-direction: column;
   }
 
@@ -1487,12 +1482,12 @@ img {
     display: none;
   }
 
+  /* BARRA INFERIOR */
   .mobile-nav {
     display: flex;
 
     position: fixed;
-
-    z-index: 20;
+    z-index: 100;
 
     bottom: 0;
     left: 0;
@@ -1502,13 +1497,17 @@ img {
 
     background: #111111;
 
-    justify-content: space-around;
-    align-items: center;
+    align-items: stretch;
+    justify-content: stretch;
+
+    padding: 0;
   }
 
   .mobile-nav button {
-    flex: 1;
+    flex: 1 1 0;
 
+    min-width: 0;
+    width: 16.6667%;
     height: 65px;
 
     display: flex;
@@ -1519,43 +1518,64 @@ img {
 
     gap: 3px;
 
-    background: none;
-    border: none;
+    padding: 0 2px;
+
+    background: transparent;
+    border: 0;
 
     color: #8a8a8a;
 
     cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
   }
 
   .mobile-nav button.active {
     color: #ffffff;
   }
 
+  .mobile-nav button:active {
+    background: #202020;
+  }
+
   .mobile-nav-icon {
-    font-size: 17px;
+    display: block;
+
+    font-size: 16px;
+    line-height: 1;
   }
 
   .mobile-nav-label {
-    font-size: 8px;
+    display: block;
 
-    letter-spacing: 0.05em;
+    max-width: 100%;
+
+    font-size: 7px;
+    line-height: 1;
+
+    letter-spacing: 0.04em;
 
     text-transform: uppercase;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .admin-main {
     width: 100%;
-
     margin-left: 0;
 
+    /*
+     * Espacio para que la barra inferior
+     * no tape el contenido.
+     */
     padding-bottom: 65px;
   }
 
   .admin-topbar {
     min-height: 65px;
-
     height: 65px;
-
     padding: 0 15px;
   }
 
@@ -1569,13 +1589,11 @@ img {
 
   .page-heading {
     margin-bottom: 30px;
-
     gap: 20px;
   }
 
   .page-heading h1 {
     font-size: 48px;
-
     letter-spacing: -2.5px;
   }
 
@@ -1585,13 +1603,11 @@ img {
 
   .stats-grid {
     grid-template-columns: 1fr 1fr;
-
     gap: 8px;
   }
 
   .stat-card {
     min-height: 110px;
-
     padding: 17px;
   }
 
@@ -1605,17 +1621,13 @@ img {
 
   .panel-heading {
     gap: 15px;
-
     flex-wrap: wrap;
   }
 
   .panel-heading .text-button {
     min-width: 120px;
-
     min-height: 40px;
-
     padding: 9px 12px;
-
     font-size: 8px;
   }
 
@@ -1627,19 +1639,16 @@ img {
 
   .today-item .status {
     grid-column: 2;
-
     width: fit-content;
   }
 
   .filters {
     padding: 15px;
-
     gap: 10px;
   }
 
   .filter-field {
     width: 100%;
-
     min-width: 100%;
   }
 
@@ -1672,15 +1681,12 @@ img {
 
   .client-stats {
     grid-column: 2;
-
     align-items: flex-start;
   }
 
   .heading-actions {
     width: 100%;
-
     flex-direction: column;
-
     align-items: stretch;
   }
 
@@ -1690,15 +1696,12 @@ img {
 
   .admin-modal-overlay {
     padding: 10px;
-
     align-items: flex-start;
   }
 
   .admin-modal {
     max-height: calc(100vh - 20px);
-
     padding: 25px 18px;
-
     margin-top: 10px;
   }
 
