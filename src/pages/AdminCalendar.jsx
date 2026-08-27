@@ -25,7 +25,6 @@ import {
 } from '../utils/dates'
 
 export default function AdminCalendar() {
-
   const {
     appointments,
     loading,
@@ -39,123 +38,96 @@ export default function AdminCalendar() {
     blockedDaysMap,
   } = useBlockedSchedule()
 
-  const [currentMonth, setCurrentMonth] =
-    useState(
-      new Date(
-        getToday().getFullYear(),
-        getToday().getMonth(),
-        1
-      )
+  const [currentMonth, setCurrentMonth] = useState(
+    new Date(
+      getToday().getFullYear(),
+      getToday().getMonth(),
+      1
     )
+  )
 
-  const [selectedDate, setSelectedDate] =
-    useState(null)
+  const [selectedDate, setSelectedDate] = useState(null)
 
-  const [search, setSearch] =
-    useState('')
+  const [search, setSearch] = useState('')
 
-  const [statusFilter, setStatusFilter] =
-    useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
 
   const [selectedAppointment, setSelectedAppointment] =
     useState(null)
 
-  const changeMonth = (
-    direction
-  ) => {
-    setCurrentMonth(
-      (current) =>
-        new Date(
-          current.getFullYear(),
-          current.getMonth() +
-            direction,
-          1
-        )
-    )
+  const changeMonth = (direction) => {
+    setCurrentMonth((current) => {
+      return new Date(
+        current.getFullYear(),
+        current.getMonth() + direction,
+        1
+      )
+    })
   }
 
-  const filteredAppointments =
-    useMemo(() => {
+  const filteredAppointments = useMemo(() => {
+    let result = [...appointments]
 
-      let result = [
-        ...appointments,
-      ]
+    if (selectedDate) {
+      const dateDb = formatDateForDatabase(selectedDate)
 
-      if (selectedDate) {
+      result = result.filter(
+        (appointment) =>
+          appointment.appointment_date === dateDb
+      )
+    }
 
-        const dateDb =
-          formatDateForDatabase(
-            selectedDate
+    if (statusFilter !== 'all') {
+      result = result.filter(
+        (appointment) =>
+          appointment.status === statusFilter
+      )
+    }
+
+    if (search.trim()) {
+      const query = search.trim().toLowerCase()
+
+      result = result.filter((appointment) => {
+        return [
+          appointment.client_name,
+          appointment.client_phone,
+          appointment.client_email,
+          appointment.service_name,
+        ]
+          .filter(Boolean)
+          .some((field) =>
+            String(field)
+              .toLowerCase()
+              .includes(query)
           )
+      })
+    }
 
-        result =
-          result.filter(
-            (appointment) =>
-              appointment.appointment_date ===
-              dateDb
-          )
-      }
+    return result
+  }, [
+    appointments,
+    selectedDate,
+    statusFilter,
+    search,
+  ])
 
-      if (
-        statusFilter !==
-        'all'
-      ) {
-        result =
-          result.filter(
-            (appointment) =>
-              appointment.status ===
-              statusFilter
-          )
-      }
-
-      if (
-        search.trim()
-      ) {
-
-        const query =
-          search
-            .trim()
-            .toLowerCase()
-
-        result =
-          result.filter(
-            (appointment) =>
-              [
-                appointment.client_name,
-                appointment.client_phone,
-                appointment.client_email,
-                appointment.service_name,
-              ]
-                .filter(Boolean)
-                .some(
-                  (field) =>
-                    String(field)
-                      .toLowerCase()
-                      .includes(
-                        query
-                      )
-                )
-          )
-      }
-
-      return result
-
-    }, [
-      appointments,
-      selectedDate,
-      statusFilter,
-      search,
-    ])
+  const clearFilters = () => {
+    setSelectedDate(null)
+    setSearch('')
+    setStatusFilter('all')
+  }
 
   return (
     <AdminLayout>
-
       <section className="admin-content">
+
+        {/* =====================================================
+            CABECERA
+        ===================================================== */}
 
         <div className="page-heading">
 
-          <div>
-
+          <div className="page-heading-content">
             <p className="eyebrow">
               ADMINISTRACIÓN
             </p>
@@ -165,7 +137,6 @@ export default function AdminCalendar() {
               <br />
               <em>CITAS.</em>
             </h1>
-
           </div>
 
           <button
@@ -178,16 +149,21 @@ export default function AdminCalendar() {
 
         </div>
 
+        {/* =====================================================
+            GRID PRINCIPAL
+        ===================================================== */}
+
         <div className="dashboard-grid">
 
-          {/* CALENDARIO */}
+          {/* ===================================================
+              CALENDARIO
+          =================================================== */}
 
-          <div className="panel">
+          <div className="panel calendar-panel">
 
             <div className="panel-heading">
 
-              <div>
-
+              <div className="panel-heading-content">
                 <p className="eyebrow">
                   VISTA
                 </p>
@@ -195,18 +171,13 @@ export default function AdminCalendar() {
                 <h2>
                   CALENDARIO
                 </h2>
-
               </div>
 
               {selectedDate && (
                 <button
                   type="button"
                   className="text-button"
-                  onClick={() =>
-                    setSelectedDate(
-                      null
-                    )
-                  }
+                  onClick={() => setSelectedDate(null)}
                 >
                   VER TODAS →
                 </button>
@@ -215,77 +186,53 @@ export default function AdminCalendar() {
             </div>
 
             <Calendar
-              currentMonth={
-                currentMonth
-              }
-
-              onChangeMonth={
-                changeMonth
-              }
-
-              selectedDate={
-                selectedDate
-              }
-
-              onSelectDate={
-                setSelectedDate
-              }
-
+              currentMonth={currentMonth}
+              onChangeMonth={changeMonth}
+              selectedDate={selectedDate}
+              onSelectDate={setSelectedDate}
               helpText="Elige un día para filtrar las citas"
-
-              blockedDaysMap={
-                blockedDaysMap
-              }
-
-              disableBlockedDays={
-                false
-              }
+              blockedDaysMap={blockedDaysMap}
+              disableBlockedDays={false}
             />
 
           </div>
 
-          {/* CITAS */}
+          {/* ===================================================
+              CITAS
+          =================================================== */}
 
-          <div className="panel">
+          <div className="panel appointments-panel-container">
 
             <div className="filters">
 
               <div className="filter-field search-field">
-
-                <label>
+                <label htmlFor="appointment-search">
                   BUSCAR
                 </label>
 
                 <input
+                  id="appointment-search"
                   type="text"
                   placeholder="Nombre, teléfono, email..."
                   value={search}
                   onChange={(event) =>
-                    setSearch(
-                      event.target.value
-                    )
+                    setSearch(event.target.value)
                   }
                 />
-
               </div>
 
               <div className="filter-field">
-
-                <label>
+                <label htmlFor="appointment-status">
                   ESTADO
                 </label>
 
                 <select
-                  value={
-                    statusFilter
-                  }
+                  id="appointment-status"
+                  value={statusFilter}
                   onChange={(event) =>
-                    setStatusFilter(
-                      event.target.value
-                    )
+                    setStatusFilter(event.target.value)
                   }
                 >
-
                   <option value="all">
                     Todas
                   </option>
@@ -301,36 +248,20 @@ export default function AdminCalendar() {
                   <option value="cancelled">
                     Canceladas
                   </option>
-
                 </select>
-
               </div>
 
               <button
                 type="button"
                 className="clear-filter"
-                onClick={() => {
-
-                  setSelectedDate(
-                    null
-                  )
-
-                  setSearch(
-                    ''
-                  )
-
-                  setStatusFilter(
-                    'all'
-                  )
-
-                }}
+                onClick={clearFilters}
               >
                 LIMPIAR
               </button>
 
             </div>
 
-            <div className="appointments-panel">
+            <div className="appointments-list-container">
 
               {loading ? (
 
@@ -347,62 +278,32 @@ export default function AdminCalendar() {
               ) : (
 
                 <>
-                  {/* =====================================================
+                  {/* ==========================================
                       ORDENADOR
-                  ===================================================== */}
+                  ========================================== */}
 
                   <div className="appointments-table-wrapper desktop-appointments">
 
                     <table className="appointments-table">
 
                       <thead>
-
                         <tr>
-
-                          <th>
-                            FECHA
-                          </th>
-
-                          <th>
-                            HORA
-                          </th>
-
-                          <th>
-                            CLIENTE
-                          </th>
-
-                          <th>
-                            SERVICIO
-                          </th>
-
-                          <th>
-                            PRECIO
-                          </th>
-
-                          <th>
-                            ESTADO
-                          </th>
-
-                          <th>
-                            ACCIÓN
-                          </th>
-
+                          <th>FECHA</th>
+                          <th>HORA</th>
+                          <th>CLIENTE</th>
+                          <th>SERVICIO</th>
+                          <th>PRECIO</th>
+                          <th>ESTADO</th>
+                          <th>ACCIÓN</th>
                         </tr>
-
                       </thead>
 
                       <tbody>
 
                         {filteredAppointments.map(
-                          (
-                            appointment
-                          ) => (
+                          (appointment) => (
 
-                            <tr
-                              key={
-                                appointment.id
-                              }
-                            >
+                            <tr key={appointment.id}>
 
                               <td>
                                 <strong>
@@ -421,7 +322,6 @@ export default function AdminCalendar() {
                               </td>
 
                               <td>
-
                                 <div className="client-cell">
 
                                   <strong>
@@ -429,13 +329,13 @@ export default function AdminCalendar() {
                                       'Cliente'}
                                   </strong>
 
-                                  <small>
-                                    {appointment.client_phone ||
-                                      ''}
-                                  </small>
+                                  {appointment.client_phone && (
+                                    <small>
+                                      {appointment.client_phone}
+                                    </small>
+                                  )}
 
                                 </div>
-
                               </td>
 
                               <td>
@@ -444,14 +344,12 @@ export default function AdminCalendar() {
                               </td>
 
                               <td>
-                                {appointment.service_price !==
-                                ''
+                                {appointment.service_price !== ''
                                   ? `${appointment.service_price} €`
                                   : '—'}
                               </td>
 
                               <td>
-
                                 <span
                                   className={`status ${getStatusClass(
                                     appointment.status
@@ -461,11 +359,9 @@ export default function AdminCalendar() {
                                     appointment.status
                                   )}
                                 </span>
-
                               </td>
 
                               <td>
-
                                 <button
                                   type="button"
                                   className="view-button"
@@ -477,11 +373,9 @@ export default function AdminCalendar() {
                                 >
                                   VER
                                 </button>
-
                               </td>
 
                             </tr>
-
                           )
                         )}
 
@@ -491,27 +385,23 @@ export default function AdminCalendar() {
 
                   </div>
 
-                  {/* =====================================================
+                  {/* ==========================================
                       MÓVIL
-                  ===================================================== */}
+                  ========================================== */}
 
                   <div className="mobile-appointments">
 
                     {filteredAppointments.map(
-                      (
-                        appointment
-                      ) => (
+                      (appointment) => (
 
                         <article
                           className="appointment-mobile-card"
-                          key={
-                            appointment.id
-                          }
+                          key={appointment.id}
                         >
 
                           <div className="appointment-mobile-top">
 
-                            <div>
+                            <div className="appointment-mobile-date-time">
 
                               <span className="appointment-mobile-date">
                                 {formatDateFromDb(
@@ -551,10 +441,7 @@ export default function AdminCalendar() {
                                 href={`tel:${appointment.client_phone}`}
                                 className="appointment-mobile-phone"
                               >
-                                📞{' '}
-                                {
-                                  appointment.client_phone
-                                }
+                                📞 {appointment.client_phone}
                               </a>
                             )}
 
@@ -566,8 +453,7 @@ export default function AdminCalendar() {
 
                             <span>
                               💶{' '}
-                              {appointment.service_price !==
-                              ''
+                              {appointment.service_price !== ''
                                 ? `${appointment.service_price} €`
                                 : '—'}
                             </span>
@@ -592,7 +478,6 @@ export default function AdminCalendar() {
                     )}
 
                   </div>
-
                 </>
 
               )}
@@ -605,18 +490,16 @@ export default function AdminCalendar() {
 
       </section>
 
+      {/* =======================================================
+          MODAL DE CITA
+      ======================================================= */}
+
       <AppointmentModal
-
-        appointment={
-          selectedAppointment
-        }
-
+        appointment={selectedAppointment}
         saving={saving}
 
         onClose={() =>
-          setSelectedAppointment(
-            null
-          )
+          setSelectedAppointment(null)
         }
 
         onUpdateStatus={async (
@@ -624,45 +507,33 @@ export default function AdminCalendar() {
           status
         ) => {
 
-          const ok =
-            await updateStatus(
-              appointment,
-              status
-            )
+          const ok = await updateStatus(
+            appointment,
+            status
+          )
 
           if (ok) {
-
-            setSelectedAppointment(
-              (current) =>
-                current
-                  ? {
-                      ...current,
-                      status,
-                    }
-                  : current
+            setSelectedAppointment((current) =>
+              current
+                ? {
+                    ...current,
+                    status,
+                  }
+                : current
             )
-
           }
-
         }}
 
-        onDelete={async (
-          appointment
-        ) => {
+        onDelete={async (appointment) => {
 
-          const ok =
-            await removeAppointment(
-              appointment
-            )
+          const ok = await removeAppointment(
+            appointment
+          )
 
           if (ok) {
-            setSelectedAppointment(
-              null
-            )
+            setSelectedAppointment(null)
           }
-
         }}
-
       />
 
     </AdminLayout>
