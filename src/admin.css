@@ -22,6 +22,7 @@ body {
   background: #111111;
 }
 
+
 /* =========================================================
    APP
 ========================================================= */
@@ -33,6 +34,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
 }
+
 
 /* =========================================================
    SIDEBAR
@@ -127,6 +129,7 @@ body {
   color: #666666;
 }
 
+
 /* =========================================================
    MAIN
 ========================================================= */
@@ -136,6 +139,7 @@ body {
   width: calc(100% - 260px);
   min-height: 100vh;
 }
+
 
 /* =========================================================
    TOPBAR
@@ -184,6 +188,7 @@ body {
   background: #111111;
 }
 
+
 /* =========================================================
    CONTENT
 ========================================================= */
@@ -222,6 +227,7 @@ body {
   font-style: italic;
   font-weight: 400;
 }
+
 
 /* =========================================================
    BUTTONS
@@ -275,6 +281,7 @@ body {
   gap: 10px;
 }
 
+
 /* =========================================================
    STATS
 ========================================================= */
@@ -309,6 +316,7 @@ body {
   letter-spacing: -3px;
 }
 
+
 /* =========================================================
    DASHBOARD
 ========================================================= */
@@ -341,33 +349,62 @@ body {
   letter-spacing: -1px;
 }
 
-.text-button {
-  border: 1px solid #111111;
-  background: #111111;
-  color: #ffffff;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  padding: 10px 16px;
+
+/* =========================================================
+   BOTÓN VER TODAS
+========================================================= */
+
+.panel-heading .text-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: auto !important;
+  min-width: 138px;
+  min-height: 42px;
+
+  padding: 10px 16px !important;
+
+  border: 1px solid #111111 !important;
+  border-radius: 0 !important;
+
+  background: #111111 !important;
+  color: #ffffff !important;
+
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  line-height: 1 !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
   cursor: pointer;
-  transition: all 0.2s ease;
   white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.text-button:hover {
-  background: #ffffff;
-  color: #111111;
-  border-color: #111111;
+.panel-heading .text-button:hover {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border-color: #111111 !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
   transform: translateY(-1px);
 }
 
-.text-button:active {
+.panel-heading .text-button:active {
   transform: translateY(0);
 }
 
-.text-button:hover {
-  text-decoration: underline;
-}
+
+/* =========================================================
+   TODAY
+========================================================= */
 
 .today-list {
   display: flex;
@@ -414,6 +451,11 @@ body {
   color: #888888;
 }
 
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
 .quick-actions {
   display: flex;
   flex-direction: column;
@@ -441,6 +483,7 @@ body {
 .quick-actions button span {
   font-size: 18px;
 }
+
 
 /* =========================================================
    FILTERS
@@ -496,6 +539,7 @@ body {
 .clear-filter {
   height: 43px;
 }
+
 
 /* =========================================================
    APPOINTMENTS
@@ -566,6 +610,7 @@ body {
   color: #ffffff;
 }
 
+
 /* =========================================================
    STATUS
 ========================================================= */
@@ -604,6 +649,7 @@ body {
   background: #eeeeeb;
   color: #555555;
 }
+
 
 /* =========================================================
    CLIENTS
@@ -674,6 +720,7 @@ body {
 .client-stats strong {
   font-size: 25px;
 }
+
 
 /* =========================================================
    SERVICES
@@ -753,6 +800,7 @@ body {
   color: #9a4e48;
 }
 
+
 /* =========================================================
    EMPTY
 ========================================================= */
@@ -763,6 +811,7 @@ body {
   color: #888888;
   font-size: 12px;
 }
+
 
 /* =========================================================
    MODAL
@@ -877,6 +926,7 @@ body {
   cursor: not-allowed;
 }
 
+
 /* =========================================================
    SERVICE FORM
 ========================================================= */
@@ -923,6 +973,21 @@ body {
   width: 100%;
 }
 
+
+/* =========================================================
+   CONFIRM DIALOG
+========================================================= */
+
+.confirm-dialog {
+  max-width: 420px;
+  text-align: center;
+}
+
+.confirm-dialog .modal-actions {
+  justify-content: center;
+}
+
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */
@@ -941,6 +1006,11 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 850px) {
   .admin-sidebar {
@@ -1017,37 +1087,55 @@ body {
   }
 }
 
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 600px) {
   .admin-sidebar {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
     position: fixed;
-    top: auto;
+    z-index: 20;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 65px;
-    min-height: 65px;
-    padding: 0;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .admin-logo {
-    display: none;
-  }
-
-  .admin-nav {
-    margin: 0;
-    width: 100%;
-    flex-direction: row;
+    background: #111111;
     justify-content: space-around;
+    align-items: center;
   }
 
-  .admin-nav button {
+  .mobile-nav button {
     flex: 1;
     height: 65px;
-    font-size: 7px;
-    padding: 5px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    color: #8a8a8a;
+    cursor: pointer;
+  }
+
+  .mobile-nav button.active {
+    color: #ffffff;
+  }
+
+  .mobile-nav-icon {
+    font-size: 17px;
+  }
+
+  .mobile-nav-label {
+    font-size: 8px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   .admin-main {
@@ -1093,6 +1181,17 @@ body {
 
   .panel {
     padding: 20px;
+  }
+
+  .panel-heading {
+    gap: 12px;
+  }
+
+  .panel-heading .text-button {
+    min-width: 120px;
+    min-height: 40px;
+    padding: 9px 12px !important;
+    font-size: 8px !important;
   }
 
   .today-item {
@@ -1171,8 +1270,10 @@ body {
     width: 100%;
   }
 }
+
+
 /* =========================================================
-   MOBILE NAV (nueva barra inferior de iconos, <600px)
+   MOBILE NAV
 ========================================================= */
 
 .mobile-nav {
@@ -1238,13 +1339,4 @@ body {
   .admin-status {
     display: none;
   }
-}
-
-.confirm-dialog {
-  max-width: 420px;
-  text-align: center;
-}
-
-.confirm-dialog .modal-actions {
-  justify-content: center;
 }
