@@ -177,7 +177,6 @@ export default function Booking() {
     setSelectedDate(date)
     setSelectedTime(null)
 
-    // Cargamos las citas de esa fecha.
     await loadForDate(date)
   }
 
@@ -470,6 +469,7 @@ export default function Booking() {
 
       await createAppointment({
         client_id: clientId,
+
         service_id:
           selectedService.id,
 
@@ -494,7 +494,10 @@ export default function Booking() {
         appointment_time:
           appointmentTime,
 
-        status: 'pending',
+        // IMPORTANTE:
+        // Las reservas nuevas quedan confirmadas
+        // automáticamente.
+        status: 'confirmed',
 
         source: 'web',
 
@@ -517,6 +520,7 @@ export default function Booking() {
       )
 
       navigate('/')
+
     } catch (error) {
       if (error.code === '23505') {
         await loadForDate(
@@ -540,6 +544,7 @@ export default function Booking() {
       alert(
         `Ha ocurrido un error al guardar la cita.\n\n${error.message}`
       )
+
     } finally {
       setIsSubmitting(false)
     }
@@ -575,7 +580,6 @@ export default function Booking() {
             </p>
           </div>
 
-          {/* SIN PANTALLA DE CARGA */}
           <AppointmentForm
             services={services}
             servicesLoading={
