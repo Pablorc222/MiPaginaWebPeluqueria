@@ -5,7 +5,7 @@ const MOBILE_NAV_ITEMS = [
   { icon: '🗓️', label: 'Citas', path: '/admin/calendario' },
   { icon: '👤', label: 'Clientes', path: '/admin/clientes' },
   { icon: '✦', label: 'Servicios', path: '/admin/servicios' },
-  { icon: '🕐', label: 'Horarios', path: '/admin/horarios' },
+  { icon: '⏰', label: 'Horarios', path: '/admin/horarios' },
   { icon: '⚙️', label: 'Ajustes', path: '/admin/config' },
 ]
 
