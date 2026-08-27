@@ -1,15 +1,12 @@
-```jsx
 import { useEffect, useState } from 'react'
 import AdminLayout from '../components/layout/AdminLayout'
 import { confirmAction } from '../components/common/ConfirmDialog'
 import { formatDateFromDb } from '../utils/dates'
-
 import {
   getBlockedDays,
   addBlockedDay,
   removeBlockedDay,
 } from '../services/blockedDays'
-
 import {
   getBlockedTimes,
   addBlockedTime,
@@ -17,6 +14,12 @@ import {
 } from '../services/blockedTimes'
 
 // Página /admin/horarios — gestión de días y horas bloqueadas
+// (vacaciones, cierres puntuales...).
+//
+// Las tablas "blocked_days" y "blocked_times" deben existir en Supabase.
+// Consulta src/services/blockedDays.js y blockedTimes.js para conocer
+// las columnas necesarias.
+
 export default function AdminSchedule() {
   const [blockedDays, setBlockedDays] = useState([])
   const [blockedTimes, setBlockedTimes] = useState([])
@@ -49,11 +52,7 @@ export default function AdminSchedule() {
       setBlockedTimes(times)
       setTablesReady(true)
     } catch (error) {
-      console.error(
-        'ERROR CARGANDO HORARIOS BLOQUEADOS:',
-        error
-      )
-
+      console.error('ERROR CARGANDO HORARIOS BLOQUEADOS:', error)
       setTablesReady(false)
     } finally {
       setLoading(false)
@@ -68,8 +67,7 @@ export default function AdminSchedule() {
     event.preventDefault()
 
     if (!dayForm.date) {
-      alert('Selecciona una fecha.')
-      return
+      return alert('Selecciona una fecha.')
     }
 
     setSaving(true)
@@ -84,9 +82,7 @@ export default function AdminSchedule() {
 
       await load()
     } catch (error) {
-      alert(
-        `No se ha podido bloquear el día.\n\n${error.message}`
-      )
+      alert(`No se ha podido bloquear el día.\n\n${error.message}`)
     } finally {
       setSaving(false)
     }
@@ -96,8 +92,7 @@ export default function AdminSchedule() {
     event.preventDefault()
 
     if (!timeForm.date || !timeForm.time) {
-      alert('Selecciona fecha y hora.')
-      return
+      return alert('Selecciona fecha y hora.')
     }
 
     setSaving(true)
@@ -116,9 +111,7 @@ export default function AdminSchedule() {
 
       await load()
     } catch (error) {
-      alert(
-        `No se ha podido bloquear la hora.\n\n${error.message}`
-      )
+      alert(`No se ha podido bloquear la hora.\n\n${error.message}`)
     } finally {
       setSaving(false)
     }
@@ -133,9 +126,7 @@ export default function AdminSchedule() {
       await removeBlockedDay(blockedDay.id)
       await load()
     } catch (error) {
-      alert(
-        `No se ha podido desbloquear.\n\n${error.message}`
-      )
+      alert(`No se ha podido desbloquear.\n\n${error.message}`)
     }
   }
 
@@ -148,26 +139,16 @@ export default function AdminSchedule() {
       await removeBlockedTime(blockedTime.id)
       await load()
     } catch (error) {
-      alert(
-        `No se ha podido desbloquear.\n\n${error.message}`
-      )
+      alert(`No se ha podido desbloquear.\n\n${error.message}`)
     }
   }
 
   return (
     <AdminLayout>
       <section className="admin-content">
-
-        {/* =====================================================
-            CABECERA
-        ===================================================== */}
-
         <div className="page-heading">
-
-          <div className="page-heading-content">
-            <p className="eyebrow">
-              DISPONIBILIDAD
-            </p>
+          <div>
+            <p className="eyebrow">DISPONIBILIDAD</p>
 
             <h1>
               TUS
@@ -175,84 +156,53 @@ export default function AdminSchedule() {
               <em>HORARIOS.</em>
             </h1>
           </div>
-
         </div>
 
-
-        {/* =====================================================
-            AVISO DE TABLAS
-        ===================================================== */}
-
         {!tablesReady && (
-          <div className="schedule-warning">
+          <div className="empty-state">
             Todavía no existen las tablas{' '}
             <strong>blocked_days</strong> y{' '}
-            <strong>blocked_times</strong> en Supabase.
-            Créalas para activar esta sección.
+            <strong>blocked_times</strong> en Supabase. Créalas para activar
+            esta sección (columnas propuestas en
+            src/services/blockedDays.js y blockedTimes.js).
           </div>
         )}
 
-
-        {/* =====================================================
-            CARGANDO
-        ===================================================== */}
-
         {loading ? (
-
           <div className="empty-state">
             Cargando...
           </div>
-
         ) : (
+          <div className="dashboard-grid">
+            {/* DÍAS BLOQUEADOS */}
 
-          <div className="dashboard-grid schedule-grid">
-
-            {/* =================================================
-                DÍAS BLOQUEADOS
-            ================================================= */}
-
-            <div className="panel schedule-panel">
-
+            <div className="panel">
               <div className="panel-heading">
-
-                <div className="panel-heading-content">
-                  <p className="eyebrow">
-                    CIERRES
-                  </p>
-
-                  <h2>
-                    DÍAS BLOQUEADOS
-                  </h2>
+                <div>
+                  <p className="eyebrow">CIERRES</p>
+                  <h2>DÍAS BLOQUEADOS</h2>
                 </div>
-
               </div>
-
-
-              {/* ===============================================
-                  FORMULARIO DÍA
-              =============================================== */}
 
               <form
                 className="service-form"
                 onSubmit={handleAddDay}
               >
-
                 <label>
                   FECHA
 
                   <input
                     type="date"
                     value={dayForm.date}
-                    onChange={(event) =>
+                    onChange={(e) =>
                       setDayForm((current) => ({
                         ...current,
-                        date: event.target.value,
+                        date: e.target.value,
                       }))
                     }
                     required
                   />
                 </label>
-
 
                 <label>
                   MOTIVO (OPCIONAL)
@@ -261,129 +211,87 @@ export default function AdminSchedule() {
                     type="text"
                     placeholder="Ej. Vacaciones"
                     value={dayForm.reason}
-                    onChange={(event) =>
+                    onChange={(e) =>
                       setDayForm((current) => ({
                         ...current,
-                        reason: event.target.value,
+                        reason: e.target.value,
                       }))
                     }
                   />
                 </label>
 
-
                 <button
                   type="submit"
                   className="primary-button modal-submit"
-                  disabled={saving}
+                  disabled={saving || !tablesReady}
                 >
                   + BLOQUEAR DÍA
                 </button>
-
               </form>
 
-
-              {/* ===============================================
-                  LISTA DE DÍAS
-              =============================================== */}
-
               {blockedDays.length === 0 ? (
-
-                <div className="empty-state schedule-empty">
+                <div className="empty-state">
                   No hay días bloqueados.
                 </div>
-
               ) : (
-
-                <div className="blocked-list">
-
+                <div className="today-list">
                   {blockedDays.map((day) => (
-
                     <div
-                      className="blocked-row blocked-day-row"
+                      className="today-item"
                       key={day.id}
                     >
-
-                      <div className="blocked-date">
+                      <span className="today-time">
                         {formatDateFromDb(day.date)}
-                      </div>
+                      </span>
 
-
-                      <div className="blocked-reason">
+                      <span className="today-client">
                         <strong>
                           {day.reason || 'Sin motivo'}
                         </strong>
-                      </div>
+                      </span>
 
-
-                      <div className="blocked-action">
-                        <button
-                          type="button"
-                          className="danger-text"
-                          onClick={() =>
-                            handleRemoveDay(day)
-                          }
-                        >
-                          QUITAR
-                        </button>
-                      </div>
-
+                      <button
+                        type="button"
+                        className="danger-text"
+                        onClick={() => handleRemoveDay(day)}
+                      >
+                        QUITAR
+                      </button>
                     </div>
-
                   ))}
-
                 </div>
-
               )}
-
             </div>
 
+            {/* HORAS BLOQUEADAS */}
 
-            {/* =================================================
-                HORAS BLOQUEADAS
-            ================================================= */}
-
-            <div className="panel schedule-panel">
-
+            <div className="panel">
               <div className="panel-heading">
-
-                <div className="panel-heading-content">
-                  <p className="eyebrow">
-                    EXCEPCIONES
-                  </p>
-
-                  <h2>
-                    HORAS BLOQUEADAS
-                  </h2>
+                <div>
+                  <p className="eyebrow">EXCEPCIONES</p>
+                  <h2>HORAS BLOQUEADAS</h2>
                 </div>
-
               </div>
-
-
-              {/* ===============================================
-                  FORMULARIO HORA
-              =============================================== */}
 
               <form
                 className="service-form"
                 onSubmit={handleAddTime}
               >
-
                 <label>
                   FECHA
 
                   <input
                     type="date"
                     value={timeForm.date}
-                    onChange={(event) =>
+                    onChange={(e) =>
                       setTimeForm((current) => ({
                         ...current,
-                        date: event.target.value,
+                        date: e.target.value,
                       }))
                     }
                     required
                   />
                 </label>
-
 
                 <label>
                   HORA
@@ -391,16 +299,15 @@ export default function AdminSchedule() {
                   <input
                     type="time"
                     value={timeForm.time}
-                    onChange={(event) =>
+                    onChange={(e) =>
                       setTimeForm((current) => ({
                         ...current,
-                        time: event.target.value,
+                        time: e.target.value,
                       }))
                     }
                     required
                   />
                 </label>
-
 
                 <label>
                   MOTIVO (OPCIONAL)
@@ -409,96 +316,61 @@ export default function AdminSchedule() {
                     type="text"
                     placeholder="Ej. Formación"
                     value={timeForm.reason}
-                    onChange={(event) =>
+                    onChange={(e) =>
                       setTimeForm((current) => ({
                         ...current,
-                        reason: event.target.value,
+                        reason: e.target.value,
                       }))
                     }
                   />
                 </label>
 
-
                 <button
                   type="submit"
                   className="primary-button modal-submit"
-                  disabled={saving}
+                  disabled={saving || !tablesReady}
                 >
                   + BLOQUEAR HORA
                 </button>
-
               </form>
 
-
-              {/* ===============================================
-                  LISTA DE HORAS
-              =============================================== */}
-
               {blockedTimes.length === 0 ? (
-
-                <div className="empty-state schedule-empty">
+                <div className="empty-state">
                   No hay horas bloqueadas.
                 </div>
-
               ) : (
-
-                <div className="blocked-list">
-
+                <div className="today-list">
                   {blockedTimes.map((time) => (
-
                     <div
-                      className="blocked-row blocked-time-row"
+                      className="today-item"
                       key={time.id}
                     >
+                      <span className="today-time">
+                        {formatDateFromDb(time.date)}{' '}
+                        {time.time?.slice(0, 5)}
+                      </span>
 
-                      <div className="blocked-date-time">
-
-                        <span className="blocked-date">
-                          {formatDateFromDb(time.date)}
-                        </span>
-
-                        <strong className="blocked-time">
-                          {time.time?.slice(0, 5)}
-                        </strong>
-
-                      </div>
-
-
-                      <div className="blocked-reason">
+                      <span className="today-client">
                         <strong>
                           {time.reason || 'Sin motivo'}
                         </strong>
-                      </div>
+                      </span>
 
-
-                      <div className="blocked-action">
-                        <button
-                          type="button"
-                          className="danger-text"
-                          onClick={() =>
-                            handleRemoveTime(time)
-                          }
-                        >
-                          QUITAR
-                        </button>
-                      </div>
-
+                      <button
+                        type="button"
+                        className="danger-text"
+                        onClick={() => handleRemoveTime(time)}
+                      >
+                        QUITAR
+                      </button>
                     </div>
-
                   ))}
-
                 </div>
-
               )}
-
             </div>
-
           </div>
-
         )}
-
       </section>
     </AdminLayout>
   )
 }
-```
