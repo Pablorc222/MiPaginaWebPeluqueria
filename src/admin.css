@@ -1721,3 +1721,65 @@ img {
     width: 100%;
   }
 }
+/* =========================================================
+   HORARIOS BLOQUEADOS — MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* Cada fila de día/hora bloqueada */
+  .today-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px 15px;
+
+    padding: 16px 0;
+
+    align-items: center;
+  }
+
+  /* Fecha / hora */
+  .today-time {
+    min-width: 0;
+
+    font-size: 15px;
+    line-height: 1.3;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Motivo */
+  .today-client {
+    min-width: 0;
+
+    grid-column: 1;
+    grid-row: 2;
+
+    display: block;
+  }
+
+  .today-client strong {
+    display: block;
+
+    font-size: 11px;
+    line-height: 1.4;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Botón QUITAR */
+  .today-item .danger-text {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+
+    align-self: center;
+
+    white-space: nowrap;
+
+    padding: 8px 0;
+
+    font-size: 8px;
+  }
+}
