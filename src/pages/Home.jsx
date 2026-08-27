@@ -49,7 +49,7 @@ export default function Home() {
                 className="primary-button"
                 onClick={() => openBooking()}
               >
-                RESER CITA →
+                RESERVAR CITA →
               </button>
 
               <a href="#servicios" className="secondary-button">
