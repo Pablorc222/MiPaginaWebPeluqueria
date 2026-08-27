@@ -1783,3 +1783,120 @@ img {
     font-size: 8px;
   }
 }
+
+/* =========================================================
+   HORARIOS BLOQUEADOS
+   No modificar .today-item general.
+========================================================= */
+
+.blocked-schedule-item {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  gap: 10px 20px;
+
+  align-items: center;
+
+  padding: 17px 0;
+
+  border-top: 1px solid #eeeeeb;
+
+  background: transparent;
+}
+
+/* Fecha / hora */
+.blocked-schedule-item .today-time {
+  min-width: 0;
+
+  font-size: 16px;
+  font-weight: 900;
+
+  line-height: 1.3;
+
+  white-space: normal;
+
+  overflow-wrap: anywhere;
+}
+
+/* Motivo */
+.blocked-schedule-item .today-client {
+  min-width: 0;
+
+  display: block;
+
+  grid-column: 1;
+}
+
+.blocked-schedule-item .today-client strong {
+  display: block;
+
+  font-size: 12px;
+  line-height: 1.4;
+
+  white-space: normal;
+
+  overflow-wrap: anywhere;
+}
+
+/* Botón quitar */
+.blocked-schedule-item .danger-text {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+
+  align-self: center;
+
+  flex-shrink: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #9a4e48;
+
+  padding: 8px 0;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   HORARIOS BLOQUEADOS — MÓVIL
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .blocked-schedule-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    gap: 7px 12px;
+
+    padding: 15px 0;
+  }
+
+  .blocked-schedule-item .today-time {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .blocked-schedule-item .today-client strong {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .blocked-schedule-item .danger-text {
+    font-size: 8px;
+
+    padding: 8px 0;
+
+    white-space: nowrap;
+  }
+}
