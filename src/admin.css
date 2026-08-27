@@ -1900,3 +1900,189 @@ img {
     white-space: nowrap;
   }
 }
+
+/* =========================================================
+   HORARIOS BLOQUEADOS
+========================================================= */
+
+.blocked-day-item,
+.blocked-time-item {
+  display: grid;
+
+  grid-template-columns:
+    minmax(120px, 1fr)
+    minmax(120px, 1fr)
+    82px;
+
+  align-items: center;
+
+  gap: 15px;
+
+  width: 100%;
+
+  padding: 17px 0;
+}
+
+
+/* FECHA / HORA */
+
+.blocked-day-item .today-time,
+.blocked-time-item .today-time {
+  min-width: 0;
+
+  white-space: normal;
+
+  overflow-wrap: anywhere;
+
+  font-size: 15px;
+}
+
+
+/* MOTIVO */
+
+.blocked-day-item .today-client,
+.blocked-time-item .today-client {
+  min-width: 0;
+
+  overflow: hidden;
+}
+
+.blocked-day-item .today-client strong,
+.blocked-time-item .today-client strong {
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   BOTÓN QUITAR
+========================================================= */
+
+.danger-text {
+  width: 82px;
+  height: 38px;
+
+  min-width: 82px;
+
+  flex: 0 0 82px;
+
+  border: 1px solid #9b5049;
+
+  border-radius: 0;
+
+  background: transparent;
+
+  color: #9b5049;
+
+  padding: 0;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 1px;
+
+  line-height: 1;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.danger-text:hover {
+  background: #9b5049;
+
+  color: #ffffff;
+
+  transform: translateY(-1px);
+}
+
+.danger-text:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .blocked-day-item,
+  .blocked-time-item {
+    grid-template-columns:
+      minmax(100px, 1fr)
+      minmax(90px, 1fr)
+      82px;
+
+    gap: 12px;
+  }
+
+}
+
+
+/* =========================================================
+   MÓVIL
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .blocked-day-item,
+  .blocked-time-item {
+    grid-template-columns:
+      minmax(0, 1fr)
+      82px;
+
+    gap: 10px;
+
+    align-items: center;
+  }
+
+  .blocked-day-item .today-time,
+  .blocked-time-item .today-time {
+    grid-column: 1;
+
+    grid-row: 1;
+
+    font-size: 14px;
+  }
+
+  .blocked-day-item .today-client,
+  .blocked-time-item .today-client {
+    grid-column: 1 / -1;
+
+    grid-row: 2;
+
+    width: 100%;
+  }
+
+  .blocked-day-item .danger-text,
+  .blocked-time-item .danger-text {
+    grid-column: 2;
+
+    grid-row: 1;
+
+    width: 82px;
+
+    min-width: 82px;
+
+    height: 38px;
+  }
+
+}
