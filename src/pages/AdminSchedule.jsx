@@ -13,13 +13,6 @@ import {
   removeBlockedTime,
 } from '../services/blockedTimes'
 
-// Página /admin/horarios — gestión de días y horas bloqueadas
-// (vacaciones, cierres puntuales...).
-//
-// Las tablas "blocked_days" y "blocked_times" deben existir en Supabase.
-// Consulta src/services/blockedDays.js y blockedTimes.js para conocer
-// las columnas necesarias.
-
 export default function AdminSchedule() {
   const [blockedDays, setBlockedDays] = useState([])
   const [blockedTimes, setBlockedTimes] = useState([])
@@ -48,8 +41,8 @@ export default function AdminSchedule() {
         getBlockedTimes(),
       ])
 
-      setBlockedDays(days)
-      setBlockedTimes(times)
+      setBlockedDays(days || [])
+      setBlockedTimes(times || [])
       setTablesReady(true)
     } catch (error) {
       console.error('ERROR CARGANDO HORARIOS BLOQUEADOS:', error)
@@ -67,7 +60,8 @@ export default function AdminSchedule() {
     event.preventDefault()
 
     if (!dayForm.date) {
-      return alert('Selecciona una fecha.')
+      alert('Selecciona una fecha.')
+      return
     }
 
     setSaving(true)
@@ -82,7 +76,11 @@ export default function AdminSchedule() {
 
       await load()
     } catch (error) {
-      alert(`No se ha podido bloquear el día.\n\n${error.message}`)
+      alert(
+        `No se ha podido bloquear el día.\n\n${
+          error?.message || 'Error desconocido'
+        }`,
+      )
     } finally {
       setSaving(false)
     }
@@ -92,7 +90,8 @@ export default function AdminSchedule() {
     event.preventDefault()
 
     if (!timeForm.date || !timeForm.time) {
-      return alert('Selecciona fecha y hora.')
+      alert('Selecciona fecha y hora.')
+      return
     }
 
     setSaving(true)
@@ -111,7 +110,11 @@ export default function AdminSchedule() {
 
       await load()
     } catch (error) {
-      alert(`No se ha podido bloquear la hora.\n\n${error.message}`)
+      alert(
+        `No se ha podido bloquear la hora.\n\n${
+          error?.message || 'Error desconocido'
+        }`,
+      )
     } finally {
       setSaving(false)
     }
@@ -126,7 +129,11 @@ export default function AdminSchedule() {
       await removeBlockedDay(blockedDay.id)
       await load()
     } catch (error) {
-      alert(`No se ha podido desbloquear.\n\n${error.message}`)
+      alert(
+        `No se ha podido desbloquear.\n\n${
+          error?.message || 'Error desconocido'
+        }`,
+      )
     }
   }
 
@@ -139,7 +146,11 @@ export default function AdminSchedule() {
       await removeBlockedTime(blockedTime.id)
       await load()
     } catch (error) {
-      alert(`No se ha podido desbloquear.\n\n${error.message}`)
+      alert(
+        `No se ha podido desbloquear.\n\n${
+          error?.message || 'Error desconocido'
+        }`,
+      )
     }
   }
 
@@ -162,9 +173,9 @@ export default function AdminSchedule() {
           <div className="empty-state">
             Todavía no existen las tablas{' '}
             <strong>blocked_days</strong> y{' '}
-            <strong>blocked_times</strong> en Supabase. Créalas para activar
-            esta sección (columnas propuestas en
-            src/services/blockedDays.js y blockedTimes.js).
+            <strong>blocked_times</strong> en Supabase.
+            <br />
+            Créalas para activar esta sección.
           </div>
         )}
 
@@ -174,7 +185,10 @@ export default function AdminSchedule() {
           </div>
         ) : (
           <div className="dashboard-grid">
-            {/* DÍAS BLOQUEADOS */}
+
+            {/* =====================================================
+                DÍAS BLOQUEADOS
+            ====================================================== */}
 
             <div className="panel">
               <div className="panel-heading">
@@ -234,17 +248,17 @@ export default function AdminSchedule() {
                   No hay días bloqueados.
                 </div>
               ) : (
-                <div className="today-list">
+                <div className="today-list blocked-schedule-list">
                   {blockedDays.map((day) => (
                     <div
-                      className="today-item"
+                      className="today-item blocked-schedule-item"
                       key={day.id}
                     >
-                      <span className="today-time">
+                      <span className="today-time blocked-schedule-date">
                         {formatDateFromDb(day.date)}
                       </span>
 
-                      <span className="today-client">
+                      <span className="today-client blocked-schedule-reason">
                         <strong>
                           {day.reason || 'Sin motivo'}
                         </strong>
@@ -252,7 +266,7 @@ export default function AdminSchedule() {
 
                       <button
                         type="button"
-                        className="danger-text"
+                        className="danger-text blocked-schedule-remove"
                         onClick={() => handleRemoveDay(day)}
                       >
                         QUITAR
@@ -263,7 +277,9 @@ export default function AdminSchedule() {
               )}
             </div>
 
-            {/* HORAS BLOQUEADAS */}
+            {/* =====================================================
+                HORAS BLOQUEADAS
+            ====================================================== */}
 
             <div className="panel">
               <div className="panel-heading">
@@ -339,18 +355,18 @@ export default function AdminSchedule() {
                   No hay horas bloqueadas.
                 </div>
               ) : (
-                <div className="today-list">
+                <div className="today-list blocked-schedule-list">
                   {blockedTimes.map((time) => (
                     <div
-                      className="today-item"
+                      className="today-item blocked-schedule-item"
                       key={time.id}
                     >
-                      <span className="today-time">
+                      <span className="today-time blocked-schedule-date">
                         {formatDateFromDb(time.date)}{' '}
                         {time.time?.slice(0, 5)}
                       </span>
 
-                      <span className="today-client">
+                      <span className="today-client blocked-schedule-reason">
                         <strong>
                           {time.reason || 'Sin motivo'}
                         </strong>
@@ -358,7 +374,7 @@ export default function AdminSchedule() {
 
                       <button
                         type="button"
-                        className="danger-text"
+                        className="danger-text blocked-schedule-remove"
                         onClick={() => handleRemoveTime(time)}
                       >
                         QUITAR
@@ -368,6 +384,7 @@ export default function AdminSchedule() {
                 </div>
               )}
             </div>
+
           </div>
         )}
       </section>
