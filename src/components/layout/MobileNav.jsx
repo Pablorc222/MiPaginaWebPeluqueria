@@ -1,6 +1,5 @@
 import { useRouter } from '../../lib/router'
 
-// Barra inferior para móviles.
 const MOBILE_NAV_ITEMS = [
   { icon: '📅', label: 'Hoy', path: '/admin' },
   { icon: '🗓️', label: 'Citas', path: '/admin/calendario' },
